@@ -1,0 +1,7 @@
+organization=markl72
+projectKey=markl72_TestSuiteJavaMaven
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.33578
+dashboardUrl=https://sonarcloud.io/dashboard?id=markl72_TestSuiteJavaMaven
+ceTaskId=AYPq5H5pkaM-hV5qEJkp
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AYPq5H5pkaM-hV5qEJkp
