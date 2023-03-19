@@ -57,7 +57,7 @@ public class Data extends HttpServlet {
             ResultSet rs = pstmt.executeQuery(sql);  
             
             while(rs.next()) {
-            	out.println("<p>Name: " + rs.getString(3) + " " + rs.getString(2) + ", Address: " + rs.getString(4) + ", Phone no: " + rs.getString(5) + "</p>"); // #10 Stored XSS
+            	out.println("<p>Name: " + rs.getString(3) + " " + rs.getString(2) + "<br>Address: " + rs.getString(4) + "<br>Phone no: " + rs.getString(5) + "</p>"); // #10 Stored XSS
             }
             connection.close();
             
