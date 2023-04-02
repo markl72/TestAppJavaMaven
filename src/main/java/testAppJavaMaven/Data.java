@@ -44,14 +44,14 @@ public class Data extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         
-		//String userid = request.getParameter("userid");
-		//String password = request.getParameter("password");
+		String userid = request.getHeader("userid");
+		String password = request.getHeader("password");
         
-		BufferedReader reader;
-		reader = new BufferedReader(new FileReader("sample.txt"));
-		String userid = reader.readLine();
-		String password = reader.readLine();
-		reader.close();
+		//BufferedReader reader;
+		//reader = new BufferedReader(new FileReader("sample.txt"));
+		//String userid = reader.readLine();
+		//String password = reader.readLine();
+		//reader.close();
 
 		
 		try {
