@@ -44,14 +44,50 @@ public class Data extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         
-		String userid = request.getHeader("userid");
-		String password = request.getHeader("password");
+		//String userid = request.getHeader("userid");
+		//String password = request.getHeader("password");
         
 		//BufferedReader reader;
 		//reader = new BufferedReader(new FileReader("sample.txt"));
 		//String userid = reader.readLine();
 		//String password = reader.readLine();
 		//reader.close();
+        String userid = null;
+        String password = null;
+        
+		try {
+			
+			Class.forName("com.mysql.jdbc.Driver");  
+			Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/insecureapp","insecureapp","45EUlZOpL7");  // #7 Hardcoded password
+			
+        	out.println("<p><b>Results:</b></p>");
+
+			String sql = "select * from users where userid = 'aaa'";
+			PreparedStatement pstmt = connection.prepareStatement( sql ); 
+            ResultSet rs = pstmt.executeQuery(sql);  
+            
+  
+            
+            while(rs.next()) {
+            	out.println("<p>Name: " + rs.getString(3) + " " + rs.getString(2) + "<br>Address: " + rs.getString(4) + "<br>Phone no: " + rs.getString(5) + "</p>"); // #10 Stored XSS
+            	userid = rs.getString(2);
+            	password = rs.getString(3);
+            }
+            connection.close();
+            
+            
+          
+			
+        	out.println("<br><br><p align='left'><font color='red'><b><i>SQL:</b> " + sql + "<i></font></p>");
+            
+            
+            out.println("</BODY></HTML>");
+            
+        } 
+		catch(Exception e){ 
+			out.println(e); 
+			System.out.println(e);
+		}  	        
 
 		
 		try {
@@ -62,7 +98,7 @@ public class Data extends HttpServlet {
         	out.println("<p><b>Results:</b></p>");
 
 			String sql = "select * from users where userid = '" + userid + "' and password = '" + password + "'";
-			PreparedStatement pstmt = connection.prepareStatement( sql ); 
+			PreparedStatement pstmt = connection.prepareStatement( sql); 
             ResultSet rs = pstmt.executeQuery(sql);  
             
             while(rs.next()) {
@@ -82,5 +118,7 @@ public class Data extends HttpServlet {
 			out.println(e); 
 			System.out.println(e);
 		}  		
+		
+
 	}
 }
