@@ -46,6 +46,7 @@ public class Data extends HttpServlet {
         
 		String userid = request.getParameter("userid");
 		String password = request.getParameter("password");
+		String param1 = "CONSTANT1";
         
 		//BufferedReader reader;
 		//reader = new BufferedReader(new FileReader("sample.txt"));
@@ -61,7 +62,7 @@ public class Data extends HttpServlet {
         	out.println("<p><b>Results:</b></p>");
 
 			StringBuilder sql = new StringBuilder("select * from users where userid = '");
-			sql.append(retrieve()); 
+			sql.append(param1); 
 			sql.append("'");
 			PreparedStatement pstmt = connection.prepareStatement( sql.toString() ); 
             ResultSet rs = pstmt.executeQuery(sql.toString());  
@@ -70,8 +71,7 @@ public class Data extends HttpServlet {
             
             while(rs.next()) {
             	out.println("<p>Name: " + rs.getString(3) + " " + rs.getString(2) + "<br>Address: " + rs.getString(4) + "<br>Phone no: " + rs.getString(5) + "</p>"); // #10 Stored XSS
-            	userid = rs.getString(2);
-            	password = rs.getString(3);
+
             }
             connection.close();
             
@@ -88,43 +88,14 @@ public class Data extends HttpServlet {
 			out.println(e); 
 			System.out.println(e);
 		}  	        
-
-		
-		try {
-			
-			Class.forName("com.mysql.jdbc.Driver");  
-			Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/insecureapp","insecureapp","45EUlZOpL7");  // #7 Hardcoded password
-			
-        	out.println("<p><b>Results:</b></p>");
-
-			String sql = "select * from users where userid = '" + userid + "' and password = '" + password + "'";
-			PreparedStatement pstmt = connection.prepareStatement( sql); 
-            ResultSet rs = pstmt.executeQuery(sql);  
-            
-            while(rs.next()) {
-            	out.println("<p>Name: " + rs.getString(3) + " " + rs.getString(2) + "<br>Address: " + rs.getString(4) + "<br>Phone no: " + rs.getString(5) + "</p>"); // #10 Stored XSS
-            }
-            connection.close();
-            
-            
-			
-        	out.println("<br><br><p align='left'><font color='red'><b><i>SQL:</b> " + sql + "<i></font></p>");
-            
-            
-            out.println("</BODY></HTML>");
-            
-        } 
-		catch(Exception e){ 
-			out.println(e); 
-			System.out.println(e);
-		}  		
 	}
-	
+
+
 	private String retrieve() {
 		
-		String returnStr = null;
+		String returnStr = "CONSTANT";
 		
-		try {
+		/*try {
 			
 			Class.forName("com.mysql.jdbc.Driver");  
 			Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/insecureapp","insecureapp","45EUlZOpL7");  // #7 Hardcoded password
@@ -141,12 +112,10 @@ public class Data extends HttpServlet {
         } 
 		catch(Exception e){ 
 			System.out.println(e);
-		}  	
+		} */ 	
 		
 		return returnStr;
 		
 		
 	}
-	
-	
 }
