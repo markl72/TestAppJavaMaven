@@ -62,7 +62,7 @@ public class Data extends HttpServlet {
         	out.println("<p><b>Results:</b></p>");
 
 			StringBuilder sql = new StringBuilder("select * from users where userid = '");
-			sql.append(param1); 
+			sql.append("AAA"); 
 			sql.append("'");
 			PreparedStatement pstmt = connection.prepareStatement( sql.toString() ); 
             ResultSet rs = pstmt.executeQuery(sql.toString());  
