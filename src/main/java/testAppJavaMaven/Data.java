@@ -44,16 +44,14 @@ public class Data extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         
-		//String userid = request.getHeader("userid");
-		//String password = request.getHeader("password");
+		String userid = request.getParameter("userid");
+		String password = request.getParameter("password");
         
 		//BufferedReader reader;
 		//reader = new BufferedReader(new FileReader("sample.txt"));
 		//String userid = reader.readLine();
 		//String password = reader.readLine();
 		//reader.close();
-        String userid = null;
-        String password = null;
         
 		try {
 			
@@ -62,9 +60,11 @@ public class Data extends HttpServlet {
 			
         	out.println("<p><b>Results:</b></p>");
 
-			String sql = "select * from users where userid = 'aaa'";
-			PreparedStatement pstmt = connection.prepareStatement( sql ); 
-            ResultSet rs = pstmt.executeQuery(sql);  
+			StringBuilder sql = new StringBuilder("select * from users where userid = '");
+			sql.append(userid); 
+			sql.append("'");
+			PreparedStatement pstmt = connection.prepareStatement( sql.toString() ); 
+            ResultSet rs = pstmt.executeQuery(sql.toString());  
             
   
             
@@ -118,7 +118,5 @@ public class Data extends HttpServlet {
 			out.println(e); 
 			System.out.println(e);
 		}  		
-		
-
 	}
 }
