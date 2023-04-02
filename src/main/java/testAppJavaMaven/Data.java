@@ -1,6 +1,8 @@
 package testAppJavaMaven;
 
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -42,8 +44,15 @@ public class Data extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         
-		String userid = request.getParameter("userid");
-		String password = request.getParameter("password");
+		//String userid = request.getParameter("userid");
+		//String password = request.getParameter("password");
+        
+		BufferedReader reader;
+		reader = new BufferedReader(new FileReader("sample.txt"));
+		String userid = reader.readLine();
+		String password = reader.readLine();
+		reader.close();
+
 		
 		try {
 			
