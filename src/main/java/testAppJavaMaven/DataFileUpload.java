@@ -5,7 +5,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,13 +15,16 @@ import java.sql.ResultSet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 @WebServlet
-public class DataFileInput extends HttpServlet {
+@MultipartConfig
+public class DataFileUpload extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -31,12 +36,14 @@ public class DataFileInput extends HttpServlet {
         
         out.println("<HTML><BODY><p><b>Test Application</b></p>");
         
+
+        
         // print form
         out.println("<p>Enter your credentials to log in</p>" 
-        		+ "<FORM action='" + request.getContextPath() + "/datafileinput' method='POST'>"
+        		+ "<FORM action='" + request.getContextPath() + "/datafileupload' method='POST'  enctype='multipart/form-data\'>"
         		+ "<TABLE><TR><TD>User id:</TD><TD><input name='userid'></TD></TR>"
         		+ "<TR><TD>Password:</TD><TD><input name='password'></TD></TR>"
-        		+ "<TR><TD></TD><TD><input type='submit'></TD></TR></TABLE>"
+        		+ "<TR><TD></TD><TD><input type='file' name='file' id='file'><input type='submit'></TD></TR></TABLE>"
         		+ "</BODY></HTML>"); 
 	}
 
@@ -49,31 +56,33 @@ public class DataFileInput extends HttpServlet {
 		//String userid = request.getParameter("userid");
 		//String password = request.getParameter("password");
 		//String param1 = "CONSTANT1";
-        
-        String userid = null;
-        String password = null;
-        
-       	ServletContext sc = getServletContext();
+        String text = null;
+	
+       // String file = request.getParameter("file");
+        //out.println("FILE: " + file);
+        // https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/Java-File-Upload-Servlet-Ajax-Example
+        try{
+        	Part filePart = request.getPart("file");
 
-
-        try {
- 
-        	BufferedReader reader = new BufferedReader(new FileReader(sc.getRealPath("WEB-INF/config.properties")));
-        	userid = reader.readLine();
-        	password = reader.readLine();
-        	out.println("<br>Path: " + sc.getRealPath("WEB-INF/config.properties"));
-        	out.println("<br>userid from file: " + userid);
-        	out.println("<br>password from file: " + password);		
-        	reader.close();
-        }catch (FileNotFoundException ex){
-            System.out.println(ex);
-            out.println(ex);
-       }
-       catch (IOException ex){
-           System.out.println(ex);
-           out.println(ex);
-       }
-      
+        	out.println("filepart1:" + filePart.getSize());
+        	InputStream fileContent = filePart.getInputStream();
+        	text = new String(fileContent.readAllBytes(), StandardCharsets.UTF_8);
+        	out.println("fileContent: " + text);
+        	//String fileName = filePart.getSubmittedFileName();
+        	//out.println("filename: " + fileName);
+        	//for (Part part : request.getParts()) {
+        	//	part.write("C:\\dev\\AAAAAAAAA.txt");
+        	//}
+        	response.getWriter().print("The file uploaded sucessfully.");
+        } catch(FileNotFoundException e) {
+        	out.println(e);        	
+        } catch(IOException e) {
+        	out.println(e);
+        } catch(ServletException e) {
+        	out.println(e);
+        } catch(Exception e) {
+        	out.println(e);
+        }
         
 		try {
 			
@@ -82,7 +91,8 @@ public class DataFileInput extends HttpServlet {
 			
         	out.println("<p><b>Results:</b></p>");
 
-			String sql = "select * from users where userid = '" + userid + "' AND password='" + password + "'";
+			String sql = "select * from users where userid = '" + text + "' AND password='" + text + "'";
+			out.println("SQL: " + sql);
 			PreparedStatement pstmt = connection.prepareStatement( sql.toString() ); 
             ResultSet rs = pstmt.executeQuery(sql.toString());  
             
