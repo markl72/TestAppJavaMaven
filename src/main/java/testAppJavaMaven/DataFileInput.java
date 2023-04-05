@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet
-public class Data extends HttpServlet {
+public class DataFileInput extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -46,9 +46,35 @@ public class Data extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         
-		String userid = request.getParameter("userid");
-		String password = request.getParameter("password");
-  
+		//String userid = request.getParameter("userid");
+		//String password = request.getParameter("password");
+		//String param1 = "CONSTANT1";
+        
+        String userid = null;
+        String password = null;
+        
+       	ServletContext sc = getServletContext();
+
+
+        try {
+ 
+        	BufferedReader reader = new BufferedReader(new FileReader(sc.getRealPath("WEB-INF/config.properties")));
+        	userid = reader.readLine();
+        	password = reader.readLine();
+        	out.println("<br>Path: " + sc.getRealPath("WEB-INF/config.properties"));
+        	out.println("<br>userid from file: " + userid);
+        	out.println("<br>password from file: " + password);		
+        	reader.close();
+        }catch (FileNotFoundException ex){
+            System.out.println(ex);
+            out.println(ex);
+       }
+       catch (IOException ex){
+           System.out.println(ex);
+           out.println(ex);
+       }
+      
+        
 		try {
 			
 			Class.forName("com.mysql.jdbc.Driver");  
@@ -57,8 +83,8 @@ public class Data extends HttpServlet {
         	out.println("<p><b>Results:</b></p>");
 
 			String sql = "select * from users where userid = '" + userid + "' AND password='" + password + "'";
-			PreparedStatement pstmt = connection.prepareStatement(sql); 
-            ResultSet rs = pstmt.executeQuery(sql);  
+			PreparedStatement pstmt = connection.prepareStatement( sql.toString() ); 
+            ResultSet rs = pstmt.executeQuery(sql.toString());  
             
              
             while(rs.next()) {
@@ -76,5 +102,34 @@ public class Data extends HttpServlet {
 			out.println(e); 
 			System.out.println(e);
 		}  	        
+	}
+
+
+	private String retrieve() {
+		
+		String returnStr = "CONSTANT";
+		
+		/*try {
+			
+			Class.forName("com.mysql.jdbc.Driver");  
+			Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/insecureapp","insecureapp","45EUlZOpL7");  // #7 Hardcoded password
+			
+			String sql = "select * from users where userid = 'aaa'";
+			PreparedStatement pstmt = connection.prepareStatement( sql); 
+            ResultSet rs = pstmt.executeQuery(sql);  
+            
+            while(rs.next()) {
+            	System.out.println("<p>Name: " + rs.getString(3) + " " + rs.getString(2) + "<br>Address: " + rs.getString(4) + "<br>Phone no: " + rs.getString(5) + "</p>"); // #10 Stored XSS
+            }
+            returnStr = rs.getNString(3);
+            connection.close();
+        } 
+		catch(Exception e){ 
+			System.out.println(e);
+		} */ 	
+		
+		return returnStr;
+		
+		
 	}
 }
